@@ -71,14 +71,8 @@ void example_uart_callback(uint8_t userData)
 			recv_char[3] = userData;//数据第四字节
 			state = 7;
 			break;
+
 		case 7:
-			//flag_isrun=userData;
-		if(userData=='1'||userData=='0')  flag_isrun=userData;
-		else flag_isrun=flag_isrun;
-		
-			state = 8;
-			break;
-		case 8:
 			if(userData == 0xaa)//帧尾
 			{
 				recv_float = uint8_to_float(recv_char);//四字节转化为浮点数
@@ -128,7 +122,7 @@ void example_uart_callback(uint8_t userData)
 						break;
 						
 					case 6:
-
+							flag_isrun=recv_char[3];
 						break;
 				}
 			}
@@ -141,7 +135,7 @@ void example_uart_callback(uint8_t userData)
 void store_my_data_buffer(void)
 {
 	my_data_buffer[0] = 123;//mc.targetCoMVelocity.element[0][0];
-	// my_data_buffer[1] = 666.6;
+	 my_data_buffer[1] = 666.6;
 //	my_data_buffer[2] = realSpeed30;
 //	my_data_buffer[3] = realSpeed40;
 //	my_data_buffer[4] = pid2.kp;

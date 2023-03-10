@@ -15,13 +15,13 @@
 
 struct CreepMotionControl mc;
 u8 TEMP1;
-u8 tmp_buf1[32]={'5'},tmp_buf[10];
+u8 tmp_buf1[32]={'5'},tmp_buf[32];
 u8 flag_isrun='0';
 u8 flag_receiveInRun=0;
 u8 firstrun=1;
 u8 RUN[32]={'1','r','u','n'};
 u8 STOP[32]={'1','S','T','O','P'};
-u8 ERROR123[32]={'1','e','r','r','o','r'};
+u8 ERROR123[32]={'1','e','r','r','o','r','\0'};
 int main(void){	
 	u8 c=0;	
 	u8 d=255;
@@ -72,7 +72,7 @@ NRF24L01_RX_Mode();
 				NRF24L01_TxPacket(RUN);
 					firstrun=0;
 				}
-				vofa_send_lines();
+			//	vofa_send_lines();
 				
 			}
 			else if(flag_isrun=='0')
@@ -91,11 +91,12 @@ NRF24L01_RX_Mode();
 			NRF24L01_RX_Mode();
 			
 		}	
-		if(flag_isrun==1)
-		{
+		
 		if(TIM5_20msFlag >= 1)
 		{
 			TIM5_20msFlag = 0;
+			if(flag_isrun=='1')
+		{
 			updateGaitParameter(&mc);
 
 			air_control_amble(&mc);
@@ -103,6 +104,7 @@ NRF24L01_RX_Mode();
 			CLASSMC_nextStep(&mc);
 			CLASSMC_inverseKinematics(&mc);
 			CLASSMC_setJointPosition(&mc);
+		}
 		}
 		
 		if(TIM2_100msFlag >= 2)
@@ -113,21 +115,9 @@ NRF24L01_RX_Mode();
 			battery_indicatior();
 
 			
-////			if(flag_isrun==1)
-////			{
-////				for(int k=1;k<=tmp_buf[0];k++)
-////					example_uart_callback( tmp_buf[k]);
-////				//NRF24L01_TX_Mode();
-////				//HAL_Delay(2);
-////				vofa_send_lines();
-////				NRF24L01_RX_Mode();	
-////			}
+
 			}
-		}
-		else 
-		{
-			delay_ms(20);
-		}
+		
 		
 		
 	}
